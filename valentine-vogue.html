@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Love</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Italiana&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --deep-burgundy: #4A0E0E;
+            --wine: #6B1717;
+            --soft-cream: #F5F1E8;
+            --charcoal: #1A1A1A;
+            --gold-accent: #C9A86A;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: var(--charcoal);
+            color: var(--soft-cream);
+            overflow-x: hidden;
+        }
+
+        /* Question Page */
+        .question-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--deep-burgundy) 100%);
+        }
+
+        .question-page::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(107, 23, 23, 0.3) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .question-content {
+            text-align: center;
+            z-index: 10;
+            animation: fadeInUp 1.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-page h1 {
+            font-family: 'Italiana', serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            margin-bottom: 3rem;
+            line-height: 1.2;
+            animation: letterSpacing 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes letterSpacing {
+            from { letter-spacing: 0.05em; }
+            to { letter-spacing: 0.15em; }
+        }
+
+        .button-container {
+            display: flex;
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .btn {
+            padding: 1.5rem 4rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border: 2px solid var(--soft-cream);
+            background: transparent;
+            color: var(--soft-cream);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--wine);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn:hover::before {
+            width: 300%;
+            height: 300%;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn:hover {
+            border-color: var(--gold-accent);
+            color: var(--gold-accent);
+        }
+
+        /* Rejection Page */
+        .rejection-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--charcoal);
+            text-align: center;
+        }
+
+        .rejection-message {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .emoji {
+            font-size: 4rem;
+            margin: 2rem 0;
+        }
+
+        /* Main Website */
+        .main-site {
+            min-height: 100vh;
+            background: var(--soft-cream);
+            color: var(--charcoal);
+        }
+
+        .page {
+            min-height: 100vh;
+            display: flex;
+            padding: 4rem 2rem;
+            position: relative;
+            opacity: 0;
+            animation: pageReveal 1s ease-out forwards;
+        }
+
+        @keyframes pageReveal {
+            to { opacity: 1; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            right: 3rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--charcoal);
+            opacity: 0.3;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-dot.active {
+            opacity: 1;
+            background: var(--wine);
+            transform: scale(1.5);
+        }
+
+        .nav-dot::after {
+            content: attr(data-page);
+            position: absolute;
+            right: 2rem;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-dot:hover::after {
+            opacity: 1;
+        }
+
+        /* Page 1: Hero */
+        .page-1 {
+            background: var(--charcoal);
+            color: var(--soft-cream);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .page-1 h2 {
+            font-family: 'Italiana', serif;
+            font-size: clamp(3rem, 10vw, 7rem);
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            margin-bottom: 2rem;
+            animation: fadeInDown 1.5s ease-out 0.5s both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            opacity: 0.8;
+            animation: fadeIn 1.5s ease-out 1s both;
+        }
+
+        .romantic-text {
+            max-width: 800px;
+            margin: 3rem auto;
+            font-size: 1.3rem;
+            line-height: 2;
+            text-align: center;
+            animation: fadeIn 1.5s ease-out 1.5s both;
+        }
+
+        /* Page 2: Photo Gallery */
+        .page-2 {
+            background: var(--soft-cream);
+            padding: 6rem 4rem;
+        }
+
+        .gallery-container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-title {
+            font-family: 'Italiana', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            text-align: center;
+            margin-bottom: 4rem;
+            color: var(--deep-burgundy);
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .photo-frame {
+            position: relative;
+            aspect-ratio: 3/4;
+            background: var(--charcoal);
+            padding: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .photo-frame:hover {
+            transform: translateY(-10px) rotate(2deg);
+            box-shadow: 0 20px 60px rgba(107, 23, 23, 0.3);
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--wine) 0%, var(--deep-burgundy) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--soft-cream);
+            font-size: 1rem;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .photo-caption {
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            text-align: center;
+            font-style: italic;
+            color: var(--wine);
+        }
+
+        /* Page 3: Love Letter */
+        .page-3 {
+            background: var(--wine);
+            color: var(--soft-cream);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .letter-container {
+            max-width: 900px;
+            background: var(--soft-cream);
+            color: var(--charcoal);
+            padding: 5rem 4rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            position: relative;
+        }
+
+        .letter-container::before,
+        .letter-container::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 2px solid var(--wine);
+        }
+
+        .letter-container::before {
+            top: -10px;
+            left: -10px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .letter-container::after {
+            bottom: -10px;
+            right: -10px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .letter-date {
+            text-align: right;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+            color: var(--wine);
+        }
+
+        .letter-salutation {
+            font-family: 'Italiana', serif;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .letter-content {
+            font-size: 1.3rem;
+            line-height: 2.2;
+            margin-bottom: 2rem;
+            text-align: justify;
+        }
+
+        .letter-signature {
+            text-align: right;
+            font-family: 'Italiana', serif;
+            font-size: 2rem;
+            margin-top: 3rem;
+        }
+
+        /* Page 4: Timeline */
+        .page-4 {
+            background: var(--charcoal);
+            color: var(--soft-cream);
+            padding: 6rem 4rem;
+        }
+
+        .timeline-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline-title {
+            font-family: 'Italiana', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 1fr 3px 1fr;
+            gap: 3rem;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content:first-child {
+            order: 3;
+        }
+
+        .timeline-line {
+            background: linear-gradient(to bottom, var(--wine), var(--gold-accent));
+            position: relative;
+        }
+
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
+            background: var(--gold-accent);
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px var(--gold-accent);
+            animation: dotPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { box-shadow: 0 0 20px var(--gold-accent); }
+            50% { box-shadow: 0 0 40px var(--gold-accent); }
+        }
+
+        .timeline-content {
+            padding: 2rem;
+        }
+
+        .timeline-date {
+            font-size: 1.1rem;
+            color: var(--gold-accent);
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+        }
+
+        .timeline-event {
+            font-size: 1.5rem;
+            line-height: 1.8;
+        }
+
+        /* Page 5: Reasons */
+        .page-5 {
+            background: var(--soft-cream);
+            padding: 6rem 4rem;
+        }
+
+        .reasons-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .reasons-title {
+            font-family: 'Italiana', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            text-align: center;
+            margin-bottom: 4rem;
+            color: var(--deep-burgundy);
+        }
+
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .reason-card {
+            background: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            border: 1px solid var(--wine);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .reason-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--wine), var(--gold-accent));
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .reason-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .reason-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .reason-number {
+            font-family: 'Italiana', serif;
+            font-size: 3rem;
+            color: var(--wine);
+            margin-bottom: 1rem;
+        }
+
+        .reason-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--charcoal);
+        }
+
+        /* Page 6: Forever */
+        .page-6 {
+            background: var(--deep-burgundy);
+            color: var(--soft-cream);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-6::before {
+            content: '♥';
+            position: absolute;
+            font-size: 40rem;
+            opacity: 0.05;
+            animation: heartbeat 3s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .forever-content {
+            z-index: 10;
+            max-width: 900px;
+        }
+
+        .forever-title {
+            font-family: 'Italiana', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            margin-bottom: 3rem;
+            letter-spacing: 0.1em;
+        }
+
+        .forever-message {
+            font-size: 1.5rem;
+            line-height: 2.2;
+            margin-bottom: 3rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Floating hearts animation */
+        .heart {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0;
+            animation: float 6s ease-in infinite;
+        }
+
+        @keyframes float {
+            0% {
+                opacity: 0;
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                right: 1rem;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .photo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline-item {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline-line {
+                display: none;
+            }
+            
+            .letter-container {
+                padding: 3rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Question Page -->
+    <div id="questionPage" class="question-page">
+        <div class="question-content">
+            <h1>Will You Be<br>My Valentine?</h1>
+            <div class="button-container">
+                <button class="btn" onclick="handleYes()">
+                    <span>Yes</span>
+                </button>
+                <button class="btn" onclick="handleNo()">
+                    <span>No</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rejection Page -->
+    <div id="rejectionPage" class="rejection-page hidden">
+        <div id="rejectionMessage1" class="rejection-message">
+            Oh well, your loss
+        </div>
+        <div class="emoji">😜</div>
+        <div id="rejectionMessage2" class="rejection-message hidden"></div>
+        <div id="rejectionMessage3" class="rejection-message hidden"></div>
+    </div>
+
+    <!-- Main Website -->
+    <div id="mainSite" class="main-site hidden">
+        <nav>
+            <div class="nav-dot active" data-page="Beginning" onclick="scrollToPage(0)"></div>
+            <div class="nav-dot" data-page="Memories" onclick="scrollToPage(1)"></div>
+            <div class="nav-dot" data-page="Letter" onclick="scrollToPage(2)"></div>
+            <div class="nav-dot" data-page="Journey" onclick="scrollToPage(3)"></div>
+            <div class="nav-dot" data-page="Reasons" onclick="scrollToPage(4)"></div>
+            <div class="nav-dot" data-page="Forever" onclick="scrollToPage(5)"></div>
+        </nav>
+
+        <!-- Page 1: Hero -->
+        <div class="page page-1" id="page1">
+            <h2>To My Beloved</h2>
+            <div class="subtitle">Six Months of Forever</div>
+            <div class="romantic-text">
+                Every moment with you feels like a scene from the most beautiful story ever written. You are the poetry that flows through my veins, the melody that plays in my heart, and the light that illuminates my darkest days.
+            </div>
+        </div>
+
+        <!-- Page 2: Photo Gallery -->
+        <div class="page page-2" id="page2">
+            <div class="gallery-container">
+                <h3 class="gallery-title">Our Moments</h3>
+                <div class="photo-grid">
+                    <div class="photo-frame">
+                        <div class="photo-placeholder">
+                            Add your favorite photo of us together
+                        </div>
+                        <div class="photo-caption">The day we met</div>
+                    </div>
+                    <div class="photo-frame">
+                        <div class="photo-placeholder">
+                            Add a photo of a special moment
+                        </div>
+                        <div class="photo-caption">Our first adventure</div>
+                    </div>
+                    <div class="photo-frame">
+                        <div class="photo-placeholder">
+                            Add another cherished memory
+                        </div>
+                        <div class="photo-caption">Making memories</div>
+                    </div>
+                    <div class="photo-frame">
+                        <div class="photo-placeholder">
+                            Add your photo here
+                        </div>
+                        <div class="photo-caption">You, being beautiful</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 3: Love Letter -->
+        <div class="page page-3" id="page3">
+            <div class="letter-container">
+                <div class="letter-date">February 14, 2026</div>
+                <div class="letter-salutation">My Dearest Love,</div>
+                <div class="letter-content">
+                    Six months ago, my world changed in the most extraordinary way. You walked into my life and suddenly everything made sense. Every song is about you, every sunset reminds me of your beauty, and every moment apart feels like an eternity.
+                    <br><br>
+                    You are my favorite notification, my best decision, my greatest adventure. Thank you for choosing me, for believing in us, and for making every single day feel like Valentine's Day.
+                    <br><br>
+                    Here's to six months down and forever to go.
+                </div>
+                <div class="letter-signature">All my love, always</div>
+            </div>
+        </div>
+
+        <!-- Page 4: Timeline -->
+        <div class="page page-4" id="page4">
+            <div class="timeline-container">
+                <h3 class="timeline-title">Our Story</h3>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">Month 1</div>
+                        <div class="timeline-event">
+                            The beginning of something beautiful. Our first date, first kiss, first "I can't stop thinking about you."
+                        </div>
+                    </div>
+                    <div class="timeline-line">
+                        <div class="timeline-dot"></div>
+                    </div>
+                    <div class="timeline-content"></div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content"></div>
+                    <div class="timeline-line">
+                        <div class="timeline-dot"></div>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Month 2</div>
+                        <div class="timeline-event">
+                            Growing closer with every shared laugh and whispered secret. You became my favorite person.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">Month 3</div>
+                        <div class="timeline-event">
+                            Adventures together, making memories that will last forever. Every moment with you is a treasure.
+                        </div>
+                    </div>
+                    <div class="timeline-line">
+                        <div class="timeline-dot"></div>
+                    </div>
+                    <div class="timeline-content"></div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content"></div>
+                    <div class="timeline-line">
+                        <div class="timeline-dot"></div>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Month 4-6</div>
+                        <div class="timeline-event">
+                            Falling deeper in love every single day. You are my home, my happiness, my everything.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 5: Reasons -->
+        <div class="page page-5" id="page5">
+            <div class="reasons-container">
+                <h3 class="reasons-title">Why I Love You</h3>
+                <div class="reasons-grid">
+                    <div class="reason-card">
+                        <div class="reason-number">01</div>
+                        <div class="reason-text">Your smile lights up my entire world</div>
+                    </div>
+                    <div class="reason-card">
+                        <div class="reason-number">02</div>
+                        <div class="reason-text">The way you make me laugh even on my worst days</div>
+                    </div>
+                    <div class="reason-card">
+                        <div class="reason-number">03</div>
+                        <div class="reason-text">How you understand me without words</div>
+                    </div>
+                    <div class="reason-card">
+                        <div class="reason-number">04</div>
+                        <div class="reason-text">Your kindness and beautiful soul</div>
+                    </div>
+                    <div class="reason-card">
+                        <div class="reason-number">05</div>
+                        <div class="reason-text">The way you make ordinary moments extraordinary</div>
+                    </div>
+                    <div class="reason-card">
+                        <div class="reason-number">06</div>
+                        <div class="reason-text">Everything about you, always</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 6: Forever -->
+        <div class="page page-6" id="page6">
+            <div class="forever-content">
+                <h2 class="forever-title">Forever Yours</h2>
+                <div class="forever-message">
+                    This is just the beginning of our story. Six months of love, laughter, and unforgettable moments. But what excites me most is knowing that this is only the start.
+                    <br><br>
+                    I choose you today, tomorrow, and for all the tomorrows after that.
+                    <br><br>
+                    Happy Valentine's Day, my love. ♥
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleYes() {
+            document.getElementById('questionPage').classList.add('hidden');
+            document.getElementById('mainSite').classList.remove('hidden');
+            createFloatingHearts();
+        }
+
+        function handleNo() {
+            document.getElementById('questionPage').classList.add('hidden');
+            document.getElementById('rejectionPage').classList.remove('hidden');
+            
+            setTimeout(() => {
+                const msg2 = document.getElementById('rejectionMessage2');
+                msg2.textContent = "Did you really think...";
+                msg2.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    const msg3 = document.getElementById('rejectionMessage3');
+                    msg3.textContent = "You don't have a choice";
+                    msg3.classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        document.getElementById('rejectionPage').classList.add('hidden');
+                        document.getElementById('mainSite').classList.remove('hidden');
+                        createFloatingHearts();
+                    }, 3000);
+                }, 2000);
+            }, 10000);
+        }
+
+        function createFloatingHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = '♥';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.remove();
+                }, 6000);
+            }, 1000);
+        }
+
+        function scrollToPage(index) {
+            const pages = document.querySelectorAll('.page');
+            pages[index].scrollIntoView({ behavior: 'smooth' });
+            
+            const dots = document.querySelectorAll('.nav-dot');
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+        }
+
+        // Update active nav dot on scroll
+        window.addEventListener('scroll', () => {
+            const pages = document.querySelectorAll('.page');
+            const dots = document.querySelectorAll('.nav-dot');
+            
+            pages.forEach((page, index) => {
+                const rect = page.getBoundingClientRect();
+                if (rect.top >= -100 && rect.top <= 300) {
+                    dots.forEach(dot => dot.classList.remove('active'));
+                    dots[index].classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
